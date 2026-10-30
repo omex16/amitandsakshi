@@ -369,7 +369,7 @@ h2,h3{text-wrap:balance;margin:0;font-weight:400;line-height:1.12}
 <path d="M14 720 V150 C14 110 60 90 112 78 C158 66 188 50 200 14 C212 50 242 66 288 78 C340 90 386 110 386 150 V720 Z" fill="none" stroke="#b8924f" stroke-width="1.6" vector-effect="non-scaling-stroke"/>
 <path d="M28 706 V156 C28 122 70 104 118 92 C162 80 190 66 200 42 C210 66 238 80 282 92 C330 104 372 122 372 156 V706 Z" fill="none" stroke="#cfb07a" stroke-width=".9" vector-effect="non-scaling-stroke"/>
 <path d="M200 60 C196 68 196 76 200 84 C204 76 204 68 200 60 Z M200 84 C193 82 189 77 188 72 C194 73 198 78 200 84 Z M200 84 C207 82 211 77 212 72 C206 73 202 78 200 84 Z" fill="none" stroke="#b8924f" stroke-width=".8" vector-effect="non-scaling-stroke"/></svg>
-    <div class="seal-half"><img src="img-3.webp" alt=""></div>
+    <div class="seal-half"><img src="img-3.webp" alt="" fetchpriority="high"></div>
   </div>
   <div class="door r">
     <svg class="damask" aria-hidden="true"><rect width="100%" height="100%" fill="url(#damask)"/></svg>
@@ -380,7 +380,7 @@ h2,h3{text-wrap:balance;margin:0;font-weight:400;line-height:1.12}
 <path d="M14 720 V150 C14 110 60 90 112 78 C158 66 188 50 200 14 C212 50 242 66 288 78 C340 90 386 110 386 150 V720 Z" fill="none" stroke="#b8924f" stroke-width="1.6" vector-effect="non-scaling-stroke"/>
 <path d="M28 706 V156 C28 122 70 104 118 92 C162 80 190 66 200 42 C210 66 238 80 282 92 C330 104 372 122 372 156 V706 Z" fill="none" stroke="#cfb07a" stroke-width=".9" vector-effect="non-scaling-stroke"/>
 <path d="M200 60 C196 68 196 76 200 84 C204 76 204 68 200 60 Z M200 84 C193 82 189 77 188 72 C194 73 198 78 200 84 Z M200 84 C207 82 211 77 212 72 C206 73 202 78 200 84 Z" fill="none" stroke="#b8924f" stroke-width=".8" vector-effect="non-scaling-stroke"/></svg>
-    <div class="seal-half"><img src="img-3.webp" alt=""></div>
+    <div class="seal-half"><img src="img-3.webp" alt="" fetchpriority="high"></div>
   </div>
   <div class="seal-ring"></div>
   <div class="seal-pulse"></div>
@@ -711,6 +711,7 @@ h2,h3{text-wrap:balance;margin:0;font-weight:400;line-height:1.12}
   }
   if (!reduce){ window.addEventListener('scroll',function(){ if(!dq){ dq=true; requestAnimationFrame(depthPass);} },{passive:true}); window.addEventListener('resize',depthPass); depthPass(); }
 
+  var musicP = null; function getMusic(){ if (!musicP) { musicP = fetch("music.mp3").then(function(r){ if (!r.ok) throw new Error("music " + r.status); return r.arrayBuffer(); }); musicP.catch(function(){ musicP = null; }); } return musicP; }
   /* ---------------- TWIRL (the couple's dance, frame by frame) ---------------- */
   var TWIRL = [], TW_FPS = 24, twBusy = false, twImgs = null, twReady = false;
   function loadTwirl(){
@@ -765,8 +766,8 @@ h2,h3{text-wrap:balance;margin:0;font-weight:400;line-height:1.12}
     requestAnimationFrame(step);
   }
   function fetchTwirl(){ var sc = document.createElement("script"); sc.src = "twirl.js"; sc.async = true; sc.onload = function(){ if (window.TWIRL_FRAMES) { TWIRL = window.TWIRL_FRAMES; loadTwirl(); } }; document.head.appendChild(sc); }
-  if (document.readyState === "complete") setTimeout(fetchTwirl, 50); else window.addEventListener("load", function(){ setTimeout(fetchTwirl, 50); });
-  setTimeout(function(){ fetch("music.mp3").catch(function(){}); }, 1500);
+  function afterLoad(){ getMusic().then(fetchTwirl, fetchTwirl); }
+  if (document.readyState === "complete") setTimeout(afterLoad, 50); else window.addEventListener("load", function(){ setTimeout(afterLoad, 50); });
   window.addEventListener('resize', function(){ if (heroGo) settleCouple(); });
   document.getElementById('couple3d').addEventListener('click', function(){ if (heroGo) playTwirl(); });
 
@@ -790,7 +791,7 @@ h2,h3{text-wrap:balance;margin:0;font-weight:400;line-height:1.12}
   /* ---------------- MUSIC: the song once, then a soothing instrumental in the same key, looping ---------------- */
   var SONG = "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAANAAAGHgAzMzMzMzMzRERERERERERVVVVVVVVVVWZmZmZmZmZ3d3d3d3d3d4iIiIiIiIiImZmZmZmZmaqqqqqqqqqqu7u7u7u7u7vMzMzMzMzM3d3d3d3d3d3u7u7u7u7u7v////////8AAAAATGF2YzYwLjMxAAAAAAAAAAAAAAAAJASSAAAAAAAABh7yDO0VAAAAAAAAAAAAAAAAAAAAAP/7EGQAD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//sSZCIP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//sQZESP8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/+xJkZo/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/+xBkiQ/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7EmSrD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7EGTNj/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//sSZN0P8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//sQZN2P8AAAaQAAAAgAAA0gAAABAAABpAAAACAAADSAAAAEVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/+xJk3Q/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/+xBk3Y/wAABpAAAACAAADSAAAAEAAAGkAAAAIAAANIAAAARVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7EmTdD/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7EGTdj/AAAGkAAAAIAAANIAAAAQAAAaQAAAAgAAA0gAAABFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV", INSTR = "music.mp3", INTRO_LEN = 0.05, LOOP_LEN = 94.0;
   var AC = null, master = null, playing = false, started = false, loading = null;
-  function dec(uri){ if (uri.indexOf("data:")!==0) return fetch(uri).then(function(r){return r.arrayBuffer();}).then(function(buf){ return new Promise(function(res,rej){ AC.decodeAudioData(buf, res, rej); }); }); var bin = atob(uri.split(',')[1]), u8 = new Uint8Array(bin.length); for (var i=0;i<bin.length;i++) u8[i]=bin.charCodeAt(i);
+  function dec(uri){ if (uri.indexOf("data:")!==0) return getMusic().then(function(buf){ return new Promise(function(res,rej){ AC.decodeAudioData(buf.slice(0), res, rej); }); }); var bin = atob(uri.split(',')[1]), u8 = new Uint8Array(bin.length); for (var i=0;i<bin.length;i++) u8[i]=bin.charCodeAt(i);
     return new Promise(function(res,rej){ AC.decodeAudioData(u8.buffer, res, rej); }); }
   function beginTrack(){
     loading = loading || Promise.all([dec(SONG), dec(INSTR)]);

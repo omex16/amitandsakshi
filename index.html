@@ -371,6 +371,15 @@ h2,h3{text-wrap:balance;margin:0;font-weight:400;line-height:1.12}
   [data-depth]{transform:none!important;opacity:1!important}
   .invited,.facts,.hr{opacity:1}
 }
+/* mobile polish */
+.gate-sub{font-size:11px}.tap{font-size:11px}.gate-city{font-size:10.5px;letter-spacing:.28em;padding-left:.28em}
+.invited{font-size:10.5px;letter-spacing:.26em;padding-left:.26em}.fact div{font-size:10.5px;letter-spacing:.22em;padding-left:.22em}
+.medal .front span,.medal .back em{font-size:11px;letter-spacing:.16em}.reveal-hint{font-size:11px}
+.cell span{font-size:10px;letter-spacing:.14em}
+.chip{font-size:10.5px;min-height:40px;padding:10px 13px}
+button,a,label{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+@media (max-height:660px){.door{--ph:min(88vh,680px)}.seal-half{width:136px;height:134px;margin-top:-67px}.door.l .seal-half{right:-68px}.door.r .seal-half{left:-68px}.seal-ring{width:168px;height:168px;margin:-84px 0 0 -84px}.seal-pulse{width:166px;height:166px;margin:-83px 0 0 -83px}.gate-top{bottom:calc(50% + 94px)}.gate-bottom{top:calc(50% + 96px)}.gate-names{font-size:clamp(30px,10vw,40px)}.gate-rule{margin-top:10px}.gate-date{margin-top:12px;font-size:20px}.gate-city{margin-top:4px}}
+@media (max-height:540px){.seal-half{width:116px;height:114px;margin-top:-57px}.door.l .seal-half{right:-58px}.door.r .seal-half{left:-58px}.seal-ring{width:144px;height:144px;margin:-72px 0 0 -72px}.seal-pulse{width:142px;height:142px;margin:-71px 0 0 -71px}.gate-top{bottom:calc(50% + 80px)}.gate-bottom{top:calc(50% + 80px)}.gate-names{font-size:30px}.gate-date{margin-top:8px;font-size:18px}}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -839,6 +848,7 @@ h2,h3{text-wrap:balance;margin:0;font-weight:400;line-height:1.12}
   }
   function startMusic(){
     try{
+      try{ if (navigator.audioSession) navigator.audioSession.type = 'playback'; }catch(e){}
       if (!AC){ var C = window.AudioContext||window.webkitAudioContext; if(!C) return; AC = new C(); master = AC.createGain(); master.gain.value = 0; master.connect(AC.destination); }
       if (AC.state === 'suspended') AC.resume();
       playing = true; musicBtn.classList.remove('off'); musicBtn.setAttribute('aria-label','Pause music');
@@ -855,7 +865,8 @@ h2,h3{text-wrap:balance;margin:0;font-weight:400;line-height:1.12}
     master.gain.linearRampToValueAtTime(0, AC.currentTime + .5);
   }
   musicBtn.addEventListener('click', function(){ playing ? stopMusic() : startMusic(); });
-  document.addEventListener('visibilitychange', function(){ if (document.hidden && playing) { stopMusic(); musicBtn.dataset.resume='1'; } });
+  document.addEventListener('visibilitychange', function(){ if (document.hidden && playing) { stopMusic(); musicBtn.dataset.resume='1'; } else if (!document.hidden && musicBtn.dataset.resume==='1') { delete musicBtn.dataset.resume; startMusic(); } });
+  document.addEventListener('pointerdown', function(){ if (AC && playing && AC.state !== 'running') AC.resume(); }, { passive: true });
 
   /* ---------------- HERO DEPTH (layers move at different speeds) ---------------- */
   var DPR=Math.min(2,window.devicePixelRatio||1);

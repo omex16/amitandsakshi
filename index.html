@@ -227,6 +227,22 @@ h2,h3{text-wrap:balance;margin:0;font-weight:400;line-height:1.12}
 .medal .back em{font-style:normal;font-size:10px;letter-spacing:.2em;font-family:var(--f-display);display:block;margin-top:4px}
 .medal.on .front{transform:rotateY(-180deg)}
 .medal.on .back{transform:rotateY(0)}
+@media (prefers-reduced-motion: no-preference){
+.medal{animation:medalFloat 3.6s ease-in-out infinite}
+.medal:nth-child(2){animation-delay:-1.2s}.medal:nth-child(3){animation-delay:-2.4s}
+@keyframes medalFloat{0%,100%{translate:0 0}50%{translate:0 -7px}}
+.medal .back{overflow:hidden}
+.medal .back:after{content:"";position:absolute;inset:-20%;background:linear-gradient(115deg,transparent 35%,rgba(255,250,230,.75) 50%,transparent 65%);transform:translateX(-120%);pointer-events:none}
+.medal.on .back:after{animation:medalShine 4.2s ease-in-out 1.1s infinite}
+.medal:nth-child(2).on .back:after{animation-delay:1.5s}.medal:nth-child(3).on .back:after{animation-delay:1.9s}
+@keyframes medalShine{0%{transform:translateX(-120%)}35%,100%{transform:translateX(120%)}}
+.medal.on{box-shadow:0 0 0 0 rgba(226,200,143,.55);border-radius:50%}
+.medal.pop{animation:medalFloat 3.6s ease-in-out infinite,medalGlow 1.2s ease-out}
+@keyframes medalGlow{0%{box-shadow:0 0 0 0 rgba(226,200,143,.7)}100%{box-shadow:0 0 0 18px rgba(226,200,143,0)}}
+.medal.spin{transform:none}
+.medal.spin .back{animation:medalSpin .9s cubic-bezier(.3,.1,.2,1)}
+@keyframes medalSpin{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
+}
 .reveal-hint{font-family:var(--f-display);font-size:10px;letter-spacing:.3em;color:var(--text-soft);margin-top:14px}
 
 /* ---------- COUNTDOWN (champagne) ---------- */
@@ -907,8 +923,16 @@ h2,h3{text-wrap:balance;margin:0;font-weight:400;line-height:1.12}
 
   /* ---------------- DATE REVEAL ---------------- */
   var medals=document.querySelectorAll('.medal'), shown=0;
+  function popMedal(m){ m.classList.remove('pop'); void m.offsetWidth; m.classList.add('pop'); setTimeout(function(){ m.classList.remove('pop'); }, 1300); }
+  function spinMedal(m){ m.classList.remove('spin'); void m.offsetWidth; m.classList.add('spin'); setTimeout(function(){ m.classList.remove('spin'); }, 950); }
+  var autoRevealed = false, revealRow = document.querySelector('.reveal-row');
+  if (revealRow && 'IntersectionObserver' in window && !reduce){
+    var rio = new IntersectionObserver(function(es){ es.forEach(function(x){ if (!x.isIntersecting || autoRevealed) return; autoRevealed = true; rio.disconnect();
+      [].forEach.call(medals, function(m, k){ setTimeout(function(){ if (!m.classList.contains('on')) m.click(); }, 500 + k * 550); }); }); }, { threshold: .6 });
+    rio.observe(revealRow);
+  }
   medals.forEach(function(m){ m.addEventListener('click', function(e){
-    if (m.classList.contains('on')) return; m.classList.add('on'); shown++;
+    if (m.classList.contains('on')) { if (!reduce) spinMedal(m); return; } m.classList.add('on'); shown++; if (!reduce) popMedal(m);
     var r=m.getBoundingClientRect(); for(var i=0;i<16;i++) addPetal(r.left+r.width/2,r.top+r.height/2,true);
     if (shown===3){ document.getElementById('reveal-hint').textContent='SEE YOU IN BHOPAL'; }
   }); });
